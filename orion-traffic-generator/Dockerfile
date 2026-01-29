@@ -1,6 +1,10 @@
-FROM rust:1.75 as builder
+FROM rust:1.83 as builder
 
 WORKDIR /app
+
+# Install build dependencies for rdkafka
+RUN apt-get update && apt-get install -y cmake build-essential && rm -rf /var/lib/apt/lists/*
+
 COPY . .
 RUN cargo build --release
 

@@ -75,8 +75,8 @@ services:
 
   orion-traffic-generator:
     build:
-      context: .
-      dockerfile: ./orion-traffic-generator/Dockerfile
+      context: ./orion-traffic-generator
+      dockerfile: Dockerfile
     container_name: orion-traffic-generator
     depends_on:
       kafka:
@@ -112,8 +112,8 @@ services:
 
   orion-ingestion:
     build:
-      context: .
-      dockerfile: ./orion-ingestion/Dockerfile
+      context: ./orion-ingestion
+      dockerfile: Dockerfile
     container_name: orion-ingestion
     depends_on:
       kafka:
@@ -138,8 +138,8 @@ services:
 
   orion-validation:
     build:
-      context: .
-      dockerfile: ./orion-validation/Dockerfile
+      context: ./orion-validation
+      dockerfile: Dockerfile
     container_name: orion-validation
     depends_on:
       kafka:
@@ -167,8 +167,8 @@ services:
 
   orion-normalization:
     build:
-      context: .
-      dockerfile: ./orion-normalization/Dockerfile
+      context: ./orion-normalization
+      dockerfile: Dockerfile
     container_name: orion-normalization
     depends_on:
       kafka:
@@ -195,8 +195,8 @@ services:
 
   orion-enrichment:
     build:
-      context: .
-      dockerfile: ./orion-enrichment/Dockerfile
+      context: ./orion-enrichment
+      dockerfile: Dockerfile
     container_name: orion-enrichment
     depends_on:
       kafka:
@@ -209,10 +209,13 @@ services:
       - "8084:8084"
     environment:
       KAFKA_BROKERS: kafka:29092
-      KAFKA_GROUP_ID: orion-enrichment-group
+      KAFKA_CONSUMER_GROUP: orion-enrichment-group
       KAFKA_INPUT_TOPIC: cdr.normalized
       KAFKA_OUTPUT_TOPIC: cdr.enriched
+      ENABLE_FRAUD_DETECTION: "false"
       FRAUD_AGENT_URL: http://orion-ml-fraud-agent:8090
+      ENABLE_NETWORK_DATA: "true"
+      ENABLE_CLIENT_DATA: "true"
       SERVER_HOST: 0.0.0.0
       SERVER_PORT: 8084
       RUST_LOG: info
@@ -226,8 +229,8 @@ services:
 
   orion-ml-fraud-agent:
     build:
-      context: .
-      dockerfile: ./orion-ml-fraud-agent/Dockerfile
+      context: ./orion-ml-fraud-agent
+      dockerfile: Dockerfile
     container_name: orion-ml-fraud-agent
     depends_on:
       kafka:
@@ -252,8 +255,8 @@ services:
 
   orion-storage-hot:
     build:
-      context: .
-      dockerfile: ./orion-storage-hot/Dockerfile
+      context: ./orion-storage-hot
+      dockerfile: Dockerfile
     container_name: orion-storage-hot
     depends_on:
       kafka:
@@ -285,8 +288,8 @@ services:
 
   orion-storage-cold:
     build:
-      context: .
-      dockerfile: ./orion-storage-cold/Dockerfile
+      context: ./orion-storage-cold
+      dockerfile: Dockerfile
     container_name: orion-storage-cold
     depends_on:
       kafka:
@@ -318,8 +321,8 @@ services:
 
   orion-api:
     build:
-      context: .
-      dockerfile: ./orion-api/Dockerfile
+      context: ./orion-api
+      dockerfile: Dockerfile
     container_name: orion-api
     depends_on:
       scylladb:
@@ -342,8 +345,8 @@ services:
 
   orion-observability:
     build:
-      context: .
-      dockerfile: ./orion-observability/Dockerfile
+      context: ./orion-observability
+      dockerfile: Dockerfile
     container_name: orion-observability
     depends_on:
       - orion-traffic-generator
@@ -396,7 +399,7 @@ services:
     networks:
       - orion-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      test: ["CMD", "mc", "ready", "local"]
       interval: 10s
       timeout: 5s
       retries: 3

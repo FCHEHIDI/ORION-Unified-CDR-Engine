@@ -1,5 +1,5 @@
 # Builder stage
-FROM rust:1.75-slim as builder
+FROM rust:1.83-slim as builder
 
 WORKDIR /app
 
@@ -8,14 +8,11 @@ RUN apt-get update && \
     apt-get install -y pkg-config libssl-dev && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy workspace Cargo files
+# Copy service files
 COPY Cargo.toml ./
-
-# Copy service source
-COPY orion-ml-fraud-agent ./orion-ml-fraud-agent
+COPY src ./src
 
 # Build the service
-WORKDIR /app/orion-ml-fraud-agent
 RUN cargo build --release
 
 # Runtime stage
@@ -29,7 +26,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy binary from builder
-COPY --from=builder /app/orion-ml-fraud-agent/target/release/orion-ml-fraud-agent /usr/local/bin/
+COPY --from=builder /app/target/release/orion-ml-fraud-agent /usr/local/bin/
 
 # Create models directory
 RUN mkdir -p /app/models

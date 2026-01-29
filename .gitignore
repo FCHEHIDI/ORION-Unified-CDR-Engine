@@ -36,5 +36,8 @@ tmp/
 temp/
 *.tmp
 
+# Development reports
+dev-reports/
+
 # PowerShell modules cache
 __pycache__/

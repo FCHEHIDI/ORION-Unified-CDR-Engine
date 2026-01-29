@@ -1,13 +1,17 @@
 # Build stage
-FROM rust:1.75 as builder
+FROM rust:1.83 as builder
 
 WORKDIR /app
 
+# Install build dependencies for rdkafka
+RUN apt-get update && apt-get install -y cmake build-essential && rm -rf /var/lib/apt/lists/*
+
+
 # Copy workspace Cargo.toml
-COPY orion-validation/Cargo.toml ./Cargo.toml
+COPY Cargo.toml ./Cargo.toml
 
 # Copy the specific crate
-COPY orion-validation/src ./src
+COPY src ./src
 
 # Build release
 RUN cargo build --release
@@ -16,7 +20,7 @@ RUN cargo build --release
 FROM debian:bookworm-slim
 
 # Install runtime dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y cmake build-essential \
     libssl3 \
     ca-certificates \
     curl \

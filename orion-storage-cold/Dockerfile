@@ -1,9 +1,12 @@
-FROM rust:1.75-slim-bullseye AS builder
+FROM rustlang/rust:nightly-bullseye-slim AS builder
 
 WORKDIR /app
 
-COPY Cargo.toml Cargo.lock ./
-RUN mkdir src && echo "fn main() {}" > src/main.rs && cargo build --release && rm -rf src
+# Install build dependencies
+RUN apt-get update && apt-get install -y pkg-config libssl-dev && rm -rf /var/lib/apt/lists/*
+
+COPY Cargo.toml ./
+RUN mkdir src && echo "fn main() {}" > src/main.rs && cargo build --release && rm -rf src target/release/deps/orion_storage_cold*
 
 COPY src ./src
 

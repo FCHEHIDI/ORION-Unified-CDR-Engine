@@ -1,10 +1,14 @@
 # Build stage
-FROM rust:1.75 AS builder
+FROM rust:1.83 AS builder
 
 WORKDIR /app
 
+# Install build dependencies for rdkafka and openssl
+RUN apt-get update && apt-get install -y cmake build-essential pkg-config libssl-dev && rm -rf /var/lib/apt/lists/*
+
+
 # Copy manifests
-COPY orion-enrichment/Cargo.toml ./Cargo.toml
+COPY Cargo.toml ./Cargo.toml
 
 # Create dummy main.rs to cache dependencies
 RUN mkdir src && echo "fn main() {}" > src/main.rs
@@ -12,8 +16,8 @@ RUN mkdir src && echo "fn main() {}" > src/main.rs
 # Build dependencies (cached layer)
 RUN cargo build --release
 
-# Remove dummy files
-RUN rm -rf src
+# Remove dummy files and binary
+RUN rm -rf src target/release/deps/orion_enrichment*
 
 # Copy real source code
 COPY src ./src
@@ -24,8 +28,11 @@ RUN cargo build --release
 # Runtime stage
 FROM debian:bookworm-slim
 
-RUN apt-get update && apt-get install -y \
+# Install runtime dependencies for librdkafka and openssl
+RUN apt-get update && apt-get install -y cmake build-essential pkg-config libssl-dev \
+    libssl3 \
     ca-certificates \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -35,9 +42,5 @@ COPY --from=builder /app/target/release/orion-enrichment .
 
 # Expose HTTP port
 EXPOSE 8084
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD [ "sh", "-c", "wget --no-verbose --tries=1 --spider http://localhost:8084/health || exit 1" ]
 
 CMD ["./orion-enrichment"]
