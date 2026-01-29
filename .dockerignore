@@ -1,0 +1,42 @@
+# Git
+.git/
+.gitignore
+
+# Rust build artifacts
+**/target/
+**/*.rs.bk
+**/*.pdb
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Scripts
+arborescences/
+*.ps1
+*.sh
+
+# Assets
+assets/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp
+tmp/
+temp/
+*.tmp
+
+# Logs
+*.log
+
+# Config (will be mounted as volumes)
+config/

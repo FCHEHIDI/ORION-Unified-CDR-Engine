@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # ===========================
   # Infrastructure
@@ -77,8 +75,8 @@ services:
 
   orion-traffic-generator:
     build:
-      context: ./orion-traffic-generator
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./orion-traffic-generator/Dockerfile
     container_name: orion-traffic-generator
     depends_on:
       kafka:
@@ -114,8 +112,8 @@ services:
 
   orion-ingestion:
     build:
-      context: ./orion-ingestion
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./orion-ingestion/Dockerfile
     container_name: orion-ingestion
     depends_on:
       kafka:
@@ -140,8 +138,8 @@ services:
 
   orion-validation:
     build:
-      context: ./orion-validation
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./orion-validation/Dockerfile
     container_name: orion-validation
     depends_on:
       kafka:
@@ -169,8 +167,8 @@ services:
 
   orion-normalization:
     build:
-      context: ./orion-normalization
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./orion-normalization/Dockerfile
     container_name: orion-normalization
     depends_on:
       kafka:
@@ -197,8 +195,8 @@ services:
 
   orion-enrichment:
     build:
-      context: ./orion-enrichment
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./orion-enrichment/Dockerfile
     container_name: orion-enrichment
     depends_on:
       kafka:
@@ -226,8 +224,8 @@ services:
 
   orion-storage-hot:
     build:
-      context: ./orion-storage-hot
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./orion-storage-hot/Dockerfile
     container_name: orion-storage-hot
     depends_on:
       kafka:

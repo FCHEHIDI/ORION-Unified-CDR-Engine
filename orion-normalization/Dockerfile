@@ -4,13 +4,13 @@ FROM rust:1.75 as builder
 WORKDIR /app
 
 # Copy workspace Cargo.toml
-COPY Cargo.toml ./
+COPY orion-normalization/Cargo.toml ./Cargo.toml
 
 # Copy the specific crate
-COPY orion-normalization ./orion-normalization
+COPY orion-normalization/src ./src
 
 # Build release
-RUN cd orion-normalization && cargo build --release
+RUN cargo build --release
 
 # Runtime stage
 FROM debian:bookworm-slim
@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy binary
-COPY --from=builder /app/orion-normalization/target/release/orion-normalization /usr/local/bin/
+COPY --from=builder /app/target/release/orion-normalization /usr/local/bin/
 
 # Expose ports
 EXPOSE 8083

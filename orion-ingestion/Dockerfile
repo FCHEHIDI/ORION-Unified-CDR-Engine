@@ -3,14 +3,12 @@ FROM rust:1.75 as builder
 
 WORKDIR /app
 
-# Copy workspace Cargo.toml
-COPY Cargo.toml ./
-
-# Copy the specific crate
-COPY orion-ingestion ./orion-ingestion
+# Copy service files
+COPY orion-ingestion/Cargo.toml ./Cargo.toml
+COPY orion-ingestion/src ./src
 
 # Build release
-RUN cd orion-ingestion && cargo build --release
+RUN cargo build --release
 
 # Runtime stage
 FROM debian:bookworm-slim
@@ -22,7 +20,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy binary
-COPY --from=builder /app/orion-ingestion/target/release/orion-ingestion /usr/local/bin/
+COPY --from=builder /app/target/release/orion-ingestion /usr/local/bin/
 
 # Expose ports
 EXPOSE 8081

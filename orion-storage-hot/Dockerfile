@@ -4,7 +4,7 @@ FROM rust:1.75 AS builder
 WORKDIR /app
 
 # Copy manifests
-COPY Cargo.toml ./
+COPY orion-storage-hot/Cargo.toml ./Cargo.toml
 
 # Create dummy main.rs to cache dependencies
 RUN mkdir src && echo "fn main() {}" > src/main.rs
