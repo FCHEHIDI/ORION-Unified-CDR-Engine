@@ -203,6 +203,8 @@ services:
         condition: service_healthy
       orion-normalization:
         condition: service_healthy
+      orion-ml-fraud-agent:
+        condition: service_healthy
     ports:
       - "8084:8084"
     environment:
@@ -218,6 +220,32 @@ services:
       - orion-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8084/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  orion-ml-fraud-agent:
+    build:
+      context: .
+      dockerfile: ./orion-ml-fraud-agent/Dockerfile
+    container_name: orion-ml-fraud-agent
+    depends_on:
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8090:8090"
+    environment:
+      SERVER_HOST: 0.0.0.0
+      SERVER_PORT: 8090
+      MODEL_PATH: /app/models/fraud_detector.onnx
+      FRAUD_THRESHOLD: 0.5
+      MODEL_BATCH_SIZE: 32
+      ENABLE_CUDA: "false"
+      RUST_LOG: info
+    networks:
+      - orion-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/health"]
       interval: 10s
       timeout: 5s
       retries: 3
