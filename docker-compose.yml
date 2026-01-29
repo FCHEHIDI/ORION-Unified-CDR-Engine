@@ -283,6 +283,124 @@ services:
       timeout: 5s
       retries: 3
 
+  orion-storage-cold:
+    build:
+      context: .
+      dockerfile: ./orion-storage-cold/Dockerfile
+    container_name: orion-storage-cold
+    depends_on:
+      kafka:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    ports:
+      - "9400:9400"
+    environment:
+      ORION_STORAGE_COLD_HOST: 0.0.0.0
+      ORION_STORAGE_COLD_PORT: 9400
+      KAFKA_BROKERS: kafka:29092
+      KAFKA_TOPIC_ENRICHED: cdr.enriched
+      KAFKA_GROUP_ID: orion-storage-cold
+      S3_ENDPOINT: http://minio:9000
+      S3_REGION: us-east-1
+      S3_BUCKET: orion-cdr-archive
+      S3_ACCESS_KEY: minioadmin
+      S3_SECRET_KEY: minioadmin
+      S3_PATH_STYLE: "true"
+      RUST_LOG: info
+    networks:
+      - orion-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9400/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  orion-api:
+    build:
+      context: .
+      dockerfile: ./orion-api/Dockerfile
+    container_name: orion-api
+    depends_on:
+      scylladb:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      ORION_API_HOST: 0.0.0.0
+      ORION_API_PORT: 8080
+      SCYLLA_NODES: scylladb:9042
+      SCYLLA_KEYSPACE: orion_cdr
+      RUST_LOG: info
+    networks:
+      - orion-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  orion-observability:
+    build:
+      context: .
+      dockerfile: ./orion-observability/Dockerfile
+    container_name: orion-observability
+    depends_on:
+      - orion-traffic-generator
+      - orion-ingestion
+      - orion-validation
+      - orion-normalization
+      - orion-enrichment
+      - orion-ml-fraud-agent
+      - orion-storage-hot
+    ports:
+      - "9100:9100"
+    environment:
+      ORION_OBSERVABILITY_HOST: 0.0.0.0
+      ORION_OBSERVABILITY_PORT: 9100
+      SERVICE_TRAFFIC_GENERATOR_URL: http://orion-traffic-generator:9200
+      SERVICE_INGESTION_URL: http://orion-ingestion:8081
+      SERVICE_VALIDATION_URL: http://orion-validation:8082
+      SERVICE_NORMALIZATION_URL: http://orion-normalization:8083
+      SERVICE_ENRICHMENT_URL: http://orion-enrichment:8084
+      SERVICE_ML_FRAUD_AGENT_URL: http://orion-ml-fraud-agent:8090
+      SERVICE_STORAGE_HOT_URL: http://orion-storage-hot:8085
+      HEALTH_CHECK_INTERVAL_SECS: 30
+      HEALTH_CHECK_TIMEOUT_SECS: 5
+      RUST_LOG: info
+    networks:
+      - orion-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9100/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ===========================
+  # Storage
+  # ===========================
+
+  minio:
+    image: minio/minio:RELEASE.2024-01-11T07-46-16Z
+    container_name: orion-minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_BROWSER: "on"
+    volumes:
+      - minio-data:/data
+    networks:
+      - orion-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   # ===========================
   # Observability
   # ===========================
@@ -358,6 +476,8 @@ volumes:
     name: orion-kafka-data
   scylla-data:
     name: orion-scylla-data
+  minio-data:
+    name: orion-minio-data
   prometheus-data:
     name: orion-prometheus-data
   grafana-data:
