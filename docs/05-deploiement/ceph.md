@@ -233,7 +233,7 @@ radosgw-admin bucket list --bucket=orion-cdr-archive
 
 ### Option 1 : Docker Compose (Dev/Test)
 
-Voir [scripts/deploy-ceph-docker.sh](../../scripts/deploy-ceph-docker.sh)
+Voir [scripts/storage/deploy-ceph-docker.sh](../../scripts/storage/deploy-ceph-docker.sh)
 
 Configuration minimale :
 - 3 conteneurs MON
@@ -284,7 +284,7 @@ scrape_configs:
 
 ## Migration MinIO → Ceph
 
-Script complet : [scripts/migrate-minio-to-ceph.sh](../../scripts/migrate-minio-to-ceph.sh)
+Script complet : [scripts/storage/migrate-minio-to-ceph.sh](../../scripts/storage/migrate-minio-to-ceph.sh)
 
 ### Étapes
 
@@ -344,6 +344,6 @@ iperf3 -c <node-ip>  # Depuis autre nœud
 ## Prochaines étapes
 
 1. ✅ Comprendre architecture Ceph (ce document)
-2. ⏭️ Exécuter [scripts/deploy-ceph-docker.sh](../../scripts/deploy-ceph-docker.sh) (cluster local)
-3. ⏭️ Tester [scripts/ceph-demo.sh](../../scripts/ceph-demo.sh) (commandes essentielles)
-4. ⏭️ Préparer [scripts/migrate-minio-to-ceph.sh](../../scripts/migrate-minio-to-ceph.sh) (prod)
+2. ⏭️ Exécuter [scripts/storage/deploy-ceph-docker.sh](../../scripts/storage/deploy-ceph-docker.sh) (cluster local)
+3. ⏭️ Tester [scripts/storage/ceph-demo.sh](../../scripts/storage/ceph-demo.sh) (commandes essentielles)
+4. ⏭️ Préparer [scripts/storage/migrate-minio-to-ceph.sh](../../scripts/storage/migrate-minio-to-ceph.sh) (prod)

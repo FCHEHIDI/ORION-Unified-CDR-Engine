@@ -93,7 +93,7 @@ cargo run
 rdkafka = { version = "0.37", features = ["tokio"] }
 ```
 
-See [scripts/deploy-ceph-docker.sh](../scripts/deploy-ceph-docker.sh) for Ceph cluster setup.
+See [scripts/storage/deploy-ceph-docker.sh](../scripts/storage/deploy-ceph-docker.sh) for Ceph cluster setup.
 
 ## Parquet Schema
 
