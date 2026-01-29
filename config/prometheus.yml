@@ -1,0 +1,98 @@
+# Prometheus Configuration for ORION CDR Engine
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'orion-dev'
+    environment: 'docker'
+
+# Alertmanager configuration (optional)
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets: ['alertmanager:9093']
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+
+  # ORION Traffic Generator
+  - job_name: 'orion-traffic-generator'
+    static_configs:
+      - targets: ['orion-traffic-generator:9200']
+        labels:
+          service: 'traffic-generator'
+          tier: 'testing'
+    scrape_interval: 10s
+
+  # ORION Ingestion
+  - job_name: 'orion-ingestion'
+    static_configs:
+      - targets: ['orion-ingestion:8081']
+        labels:
+          service: 'ingestion'
+          tier: 'pipeline'
+          stage: '1'
+    scrape_interval: 10s
+
+  # ORION Validation
+  - job_name: 'orion-validation'
+    static_configs:
+      - targets: ['orion-validation:8082']
+        labels:
+          service: 'validation'
+          tier: 'pipeline'
+          stage: '2'
+    scrape_interval: 10s
+
+  # ORION Normalization
+  - job_name: 'orion-normalization'
+    static_configs:
+      - targets: ['orion-normalization:8083']
+        labels:
+          service: 'normalization'
+          tier: 'pipeline'
+          stage: '3'
+    scrape_interval: 10s
+
+  # ORION Enrichment
+  - job_name: 'orion-enrichment'
+    static_configs:
+      - targets: ['orion-enrichment:8084']
+        labels:
+          service: 'enrichment'
+          tier: 'pipeline'
+          stage: '4'
+    scrape_interval: 10s
+
+  # ORION Storage Hot
+  - job_name: 'orion-storage-hot'
+    static_configs:
+      - targets: ['orion-storage-hot:8085']
+        labels:
+          service: 'storage-hot'
+          tier: 'storage'
+          stage: '5'
+    scrape_interval: 10s
+
+  # Kafka Exporter (if deployed)
+  # - job_name: 'kafka'
+  #   static_configs:
+  #     - targets: ['kafka-exporter:9308']
+  #       labels:
+  #         service: 'kafka'
+  #         tier: 'infrastructure'
+
+  # ScyllaDB Exporter (if deployed)
+  # - job_name: 'scylladb'
+  #   static_configs:
+  #     - targets: ['scylla-exporter:9180']
+  #       labels:
+  #         service: 'scylladb'
+  #         tier: 'infrastructure'

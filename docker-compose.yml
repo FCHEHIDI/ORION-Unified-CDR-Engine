@@ -1,0 +1,338 @@
+version: '3.8'
+
+services:
+  # ===========================
+  # Infrastructure
+  # ===========================
+  
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: orion-zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper/data
+      - zookeeper-logs:/var/lib/zookeeper/log
+    networks:
+      - orion-network
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "2181"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: orion-kafka
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_NUM_PARTITIONS: 3
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    networks:
+      - orion-network
+    healthcheck:
+      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  scylladb:
+    image: scylladb/scylla:5.4
+    container_name: orion-scylladb
+    command: --smp 2 --memory 2G --overprovisioned 1
+    ports:
+      - "9042:9042"
+      - "19042:19042"
+    volumes:
+      - scylla-data:/var/lib/scylla
+    networks:
+      - orion-network
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "SELECT now() FROM system.local;"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+  # ===========================
+  # ORION Microservices
+  # ===========================
+
+  orion-traffic-generator:
+    build:
+      context: ./orion-traffic-generator
+      dockerfile: Dockerfile
+    container_name: orion-traffic-generator
+    depends_on:
+      kafka:
+        condition: service_healthy
+    ports:
+      - "9200:9200"
+    environment:
+      KAFKA_BROKERS: kafka:29092
+      KAFKA_BASE_TOPIC: cdr.raw
+      GENERATION_RATE: 100
+      BURST_ENABLED: "true"
+      BURST_MULTIPLIER: 5
+      BURST_DURATION_SECS: 30
+      FRAUD_RATE_PERCENT: 10
+      MALFORMED_RATE_PERCENT: 2
+      SIMULATE_LATENCY: "true"
+      MIN_LATENCY_MS: 10
+      MAX_LATENCY_MS: 500
+      SIMULATE_ERRORS: "true"
+      ERROR_RATE_PERCENT: 3
+      ENABLE_RETRY: "true"
+      MAX_RETRIES: 3
+      SERVER_HOST: 0.0.0.0
+      SERVER_PORT: 9200
+      RUST_LOG: info
+    networks:
+      - orion-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  orion-ingestion:
+    build:
+      context: ./orion-ingestion
+      dockerfile: Dockerfile
+    container_name: orion-ingestion
+    depends_on:
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+    environment:
+      KAFKA_BROKERS: kafka:29092
+      KAFKA_GROUP_ID: orion-ingestion-group
+      KAFKA_INPUT_TOPICS: cdr.raw.FR,cdr.raw.TN,cdr.raw.FN,cdr.raw.CH
+      KAFKA_OUTPUT_TOPIC: cdr.processed
+      SERVER_HOST: 0.0.0.0
+      SERVER_PORT: 8081
+      RUST_LOG: info
+    networks:
+      - orion-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  orion-validation:
+    build:
+      context: ./orion-validation
+      dockerfile: Dockerfile
+    container_name: orion-validation
+    depends_on:
+      kafka:
+        condition: service_healthy
+      orion-ingestion:
+        condition: service_healthy
+    ports:
+      - "8082:8082"
+    environment:
+      KAFKA_BROKERS: kafka:29092
+      KAFKA_GROUP_ID: orion-validation-group
+      KAFKA_INPUT_TOPIC: cdr.processed
+      KAFKA_OUTPUT_TOPIC_VALID: cdr.validated
+      KAFKA_OUTPUT_TOPIC_REJECTED: cdr.rejected
+      SERVER_HOST: 0.0.0.0
+      SERVER_PORT: 8082
+      RUST_LOG: info
+    networks:
+      - orion-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  orion-normalization:
+    build:
+      context: ./orion-normalization
+      dockerfile: Dockerfile
+    container_name: orion-normalization
+    depends_on:
+      kafka:
+        condition: service_healthy
+      orion-validation:
+        condition: service_healthy
+    ports:
+      - "8083:8083"
+    environment:
+      KAFKA_BROKERS: kafka:29092
+      KAFKA_GROUP_ID: orion-normalization-group
+      KAFKA_INPUT_TOPIC: cdr.validated
+      KAFKA_OUTPUT_TOPIC: cdr.normalized
+      SERVER_HOST: 0.0.0.0
+      SERVER_PORT: 8083
+      RUST_LOG: info
+    networks:
+      - orion-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8083/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  orion-enrichment:
+    build:
+      context: ./orion-enrichment
+      dockerfile: Dockerfile
+    container_name: orion-enrichment
+    depends_on:
+      kafka:
+        condition: service_healthy
+      orion-normalization:
+        condition: service_healthy
+    ports:
+      - "8084:8084"
+    environment:
+      KAFKA_BROKERS: kafka:29092
+      KAFKA_GROUP_ID: orion-enrichment-group
+      KAFKA_INPUT_TOPIC: cdr.normalized
+      KAFKA_OUTPUT_TOPIC: cdr.enriched
+      FRAUD_AGENT_URL: http://orion-ml-fraud-agent:8090
+      SERVER_HOST: 0.0.0.0
+      SERVER_PORT: 8084
+      RUST_LOG: info
+    networks:
+      - orion-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8084/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  orion-storage-hot:
+    build:
+      context: ./orion-storage-hot
+      dockerfile: Dockerfile
+    container_name: orion-storage-hot
+    depends_on:
+      kafka:
+        condition: service_healthy
+      scylladb:
+        condition: service_healthy
+      orion-enrichment:
+        condition: service_healthy
+    ports:
+      - "8085:8085"
+    environment:
+      KAFKA_BROKERS: kafka:29092
+      KAFKA_GROUP_ID: orion-storage-hot-group
+      KAFKA_INPUT_TOPIC: cdr.enriched
+      KAFKA_OUTPUT_TOPIC: cdr.stored
+      SCYLLA_NODES: scylladb:9042
+      SCYLLA_KEYSPACE: orion_cdr
+      SCYLLA_REPLICATION_FACTOR: 1
+      SERVER_HOST: 0.0.0.0
+      SERVER_PORT: 8085
+      RUST_LOG: info
+    networks:
+      - orion-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8085/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # ===========================
+  # Observability
+  # ===========================
+
+  prometheus:
+    image: prom/prometheus:v2.48.0
+    container_name: orion-prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - orion-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  grafana:
+    image: grafana/grafana:10.2.2
+    container_name: orion-grafana
+    depends_on:
+      prometheus:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: orion2026
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_SERVER_ROOT_URL: http://localhost:3000
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
+    volumes:
+      - ./config/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./config/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./config/grafana/dashboard-definitions:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    networks:
+      - orion-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+# ===========================
+# Networks
+# ===========================
+
+networks:
+  orion-network:
+    driver: bridge
+    name: orion-network
+
+# ===========================
+# Volumes
+# ===========================
+
+volumes:
+  zookeeper-data:
+    name: orion-zookeeper-data
+  zookeeper-logs:
+    name: orion-zookeeper-logs
+  kafka-data:
+    name: orion-kafka-data
+  scylla-data:
+    name: orion-scylla-data
+  prometheus-data:
+    name: orion-prometheus-data
+  grafana-data:
+    name: orion-grafana-data

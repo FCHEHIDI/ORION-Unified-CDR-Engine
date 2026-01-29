@@ -1,0 +1,329 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "red", "value": 80}
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {"h": 4, "w": 4, "x": 0, "y": 0},
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"values": false, "calcs": ["lastNotNull"], "fields": ""},
+        "textMode": "auto"
+      },
+      "targets": [{"expr": "rate(ingestion_messages_processed_total[1m]) * 60", "refId": "A"}],
+      "title": "Ingestion (msg/min)",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "red", "value": 80}
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {"h": 4, "w": 4, "x": 4, "y": 0},
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"values": false, "calcs": ["lastNotNull"], "fields": ""},
+        "textMode": "auto"
+      },
+      "targets": [{"expr": "rate(validation_valid_cdr_total[1m]) * 60", "refId": "A"}],
+      "title": "Validation (valid/min)",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "red", "value": 80}
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {"h": 4, "w": 4, "x": 8, "y": 0},
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"values": false, "calcs": ["lastNotNull"], "fields": ""},
+        "textMode": "auto"
+      },
+      "targets": [{"expr": "rate(normalization_voice_total[1m]) * 60 + rate(normalization_data_total[1m]) * 60 + rate(normalization_sms_total[1m]) * 60", "refId": "A"}],
+      "title": "Normalization (CDR/min)",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "yellow", "value": 50},
+              {"color": "red", "value": 100}
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {"h": 4, "w": 4, "x": 12, "y": 0},
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"values": false, "calcs": ["lastNotNull"], "fields": ""},
+        "textMode": "auto"
+      },
+      "targets": [{"expr": "enrichment_fraud_detected_total", "refId": "A"}],
+      "title": "Fraud Detected",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "red", "value": 80}
+            ]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {"h": 4, "w": 4, "x": 16, "y": 0},
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"values": false, "calcs": ["lastNotNull"], "fields": ""},
+        "textMode": "auto"
+      },
+      "targets": [{"expr": "storage_inserts_total", "refId": "A"}],
+      "title": "Storage (inserts)",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {"color": "red", "value": null},
+              {"color": "yellow", "value": 90},
+              {"color": "green", "value": 95}
+            ]
+          },
+          "unit": "percentunit",
+          "max": 1,
+          "min": 0
+        }
+      },
+      "gridPos": {"h": 4, "w": 4, "x": 20, "y": 0},
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"values": false, "calcs": ["lastNotNull"], "fields": ""},
+        "textMode": "auto"
+      },
+      "targets": [{"expr": "(rate(validation_valid_cdr_total[5m]) + rate(validation_invalid_cdr_total[5m])) / rate(ingestion_messages_processed_total[5m])", "refId": "A"}],
+      "title": "Pipeline Success Rate",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "custom": {
+            "axisPlacement": "auto",
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineWidth": 2,
+            "showPoints": "never"
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+      "id": 7,
+      "options": {
+        "legend": {"calcs": ["last", "mean"], "displayMode": "table", "placement": "right"},
+        "tooltip": {"mode": "multi"}
+      },
+      "targets": [
+        {"expr": "rate(ingestion_messages_processed_total[1m]) * 60", "legendFormat": "Ingestion", "refId": "A"},
+        {"expr": "rate(validation_valid_cdr_total[1m]) * 60", "legendFormat": "Validation", "refId": "B"},
+        {"expr": "rate(normalization_voice_total[1m]) * 60 + rate(normalization_data_total[1m]) * 60 + rate(normalization_sms_total[1m]) * 60", "legendFormat": "Normalization", "refId": "C"},
+        {"expr": "rate(enrichment_cdr_enriched_total[1m]) * 60", "legendFormat": "Enrichment", "refId": "D"},
+        {"expr": "rate(storage_inserts_total[1m]) * 60", "legendFormat": "Storage", "refId": "E"}
+      ],
+      "title": "Pipeline Throughput (CDR/min)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "custom": {
+            "axisPlacement": "auto",
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineWidth": 2,
+            "showPoints": "never"
+          },
+          "unit": "s"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
+      "id": 8,
+      "options": {
+        "legend": {"calcs": ["mean", "max"], "displayMode": "table", "placement": "right"},
+        "tooltip": {"mode": "multi"}
+      },
+      "targets": [
+        {"expr": "histogram_quantile(0.95, rate(ingestion_processing_latency_seconds_bucket[5m]))", "legendFormat": "Ingestion p95", "refId": "A"},
+        {"expr": "histogram_quantile(0.95, rate(validation_latency_seconds_bucket[5m]))", "legendFormat": "Validation p95", "refId": "B"},
+        {"expr": "histogram_quantile(0.95, rate(normalization_latency_seconds_bucket[5m]))", "legendFormat": "Normalization p95", "refId": "C"},
+        {"expr": "histogram_quantile(0.95, rate(enrichment_latency_seconds_bucket[5m]))", "legendFormat": "Enrichment p95", "refId": "D"},
+        {"expr": "histogram_quantile(0.95, rate(storage_insert_latency_seconds_bucket[5m]))", "legendFormat": "Storage p95", "refId": "E"}
+      ],
+      "title": "Pipeline Latency p95",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "custom": {
+            "axisPlacement": "auto",
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "lineWidth": 2,
+            "showPoints": "never"
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12},
+      "id": 9,
+      "options": {
+        "legend": {"calcs": ["last", "mean"], "displayMode": "table", "placement": "right"},
+        "tooltip": {"mode": "multi"}
+      },
+      "targets": [
+        {"expr": "rate(validation_invalid_cdr_total[1m]) * 60", "legendFormat": "Invalid CDR", "refId": "A"},
+        {"expr": "rate(ingestion_errors_total[1m]) * 60", "legendFormat": "Ingestion Errors", "refId": "B"},
+        {"expr": "rate(validation_errors_total[1m]) * 60", "legendFormat": "Validation Errors", "refId": "C"},
+        {"expr": "rate(normalization_errors_total[1m]) * 60", "legendFormat": "Normalization Errors", "refId": "D"},
+        {"expr": "rate(enrichment_errors_total[1m]) * 60", "legendFormat": "Enrichment Errors", "refId": "E"},
+        {"expr": "rate(storage_errors_total[1m]) * 60", "legendFormat": "Storage Errors", "refId": "F"}
+      ],
+      "title": "Pipeline Errors (per min)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "custom": {
+            "axisPlacement": "auto",
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "lineWidth": 2,
+            "showPoints": "never"
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12},
+      "id": 10,
+      "options": {
+        "legend": {"calcs": ["last"], "displayMode": "table", "placement": "right"},
+        "tooltip": {"mode": "multi"}
+      },
+      "targets": [
+        {"expr": "rate(normalization_voice_total[1m]) * 60", "legendFormat": "Voice", "refId": "A"},
+        {"expr": "rate(normalization_data_total[1m]) * 60", "legendFormat": "Data", "refId": "B"},
+        {"expr": "rate(normalization_sms_total[1m]) * 60", "legendFormat": "SMS", "refId": "C"}
+      ],
+      "title": "Event Type Distribution (CDR/min)",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": ["orion", "overview"],
+  "templating": {"list": []},
+  "time": {"from": "now-15m", "to": "now"},
+  "timezone": "browser",
+  "title": "ORION - Pipeline Overview",
+  "uid": "orion-overview",
+  "version": 1
+}
