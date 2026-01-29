@@ -1,6 +1,6 @@
 use crate::service::model::{RawCDR, ProcessedCDR};
 use crate::metrics;
-use tracing::{info, warn, error};
+use tracing::{info, error};
 use std::time::Instant;
 
 pub struct MessageProcessor;

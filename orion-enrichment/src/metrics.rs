@@ -26,10 +26,6 @@ pub fn increment_messages_total() {
     counter!("orion_enrichment_messages_total").increment(1);
 }
 
-pub fn increment_errors_total() {
-    counter!("orion_enrichment_errors_total").increment(1);
-}
-
 pub fn increment_fraud_detected_total() {
     counter!("orion_enrichment_fraud_detected_total").increment(1);
 }

@@ -36,10 +36,6 @@ pub fn increment_messages_total() {
     counter!("orion_normalization_messages_total").increment(1);
 }
 
-pub fn increment_errors_total() {
-    counter!("orion_normalization_errors_total").increment(1);
-}
-
 pub fn increment_voice_total() {
     counter!("orion_normalization_voice_total").increment(1);
 }

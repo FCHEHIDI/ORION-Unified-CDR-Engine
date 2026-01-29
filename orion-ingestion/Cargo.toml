@@ -13,7 +13,7 @@ tower-http = { version = "0.5", features = ["trace", "cors"] }
 tokio = { version = "1", features = ["full"] }
 
 # Kafka
-rdkafka = { version = "0.36", features = ["cmake-build", "ssl", "sasl"] }
+rdkafka = { version = "0.36", features = ["cmake-build"] }
 
 # Serialization
 serde = { version = "1", features = ["derive"] }

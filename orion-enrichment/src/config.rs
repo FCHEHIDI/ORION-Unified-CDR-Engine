@@ -24,6 +24,7 @@ pub struct ServerConfig {
 #[derive(Debug, Clone)]
 pub struct EnrichmentConfig {
     pub enable_fraud_detection: bool,
+    #[allow(dead_code)]
     pub fraud_agent_url: String,
     pub enable_network_data: bool,
     pub enable_client_data: bool,

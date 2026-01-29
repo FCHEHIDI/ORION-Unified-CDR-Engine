@@ -1,7 +1,7 @@
 use crate::config::EnrichmentConfig;
 use crate::metrics;
 use crate::service::model::*;
-use chrono::Utc;
+use chrono::{Datelike, Utc};
 use std::time::Instant;
 
 pub struct Enricher {
@@ -60,7 +60,7 @@ impl Enricher {
 
     /// Simple rule-based fraud detection (placeholder for ML model)
     async fn detect_fraud(&self, cdr: &UnifiedCDR) -> FraudInfo {
-        let mut fraud_score = 0.0;
+        let mut fraud_score: f64 = 0.0;
         let mut reasons = Vec::new();
 
         // Rule 1: Excessive duration (> 2 hours)

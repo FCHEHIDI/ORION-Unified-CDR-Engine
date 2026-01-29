@@ -1,0 +1,258 @@
+# ORION Custom Emoji Prompts
+# Copy/paste dans Midjourney ou Copilot pour générer des emojis personnalisés
+# Format recommandé : 512x512px, fond transparent
+
+================================================================================
+🎯 MICROSERVICES ORION
+================================================================================
+
+1. INGESTION
+flat emoji style, funnel with data stream entering, blue gradient, 
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+2. VALIDATION  
+flat emoji style, checkmark shield with magnifying glass, green and white,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+3. NORMALIZATION
+flat emoji style, gears organizing scattered data into neat grid,
+purple gradient, simple geometric design, transparent background, 512x512
+
+4. ENRICHMENT
+flat emoji style, database with plus sign and sparkles, orange gradient,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+5. STORAGE-HOT
+flat emoji style, fire icon merged with server rack, red and yellow,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+6. STORAGE-COLD
+flat emoji style, snowflake merged with archive box, ice blue gradient,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+7. ML-FRAUD-AGENT
+flat emoji style, robot detective with magnifying glass, red warning badge,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+8. API
+flat emoji style, connected nodes with HTTP arrows, teal gradient,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+9. OBSERVABILITY
+flat emoji style, eye with dashboard gauges, indigo gradient,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+================================================================================
+💾 TECHNOLOGIES
+================================================================================
+
+10. KAFKA
+flat emoji style, fast-moving data packets in stream, purple and black,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+11. SCYLLADB
+flat emoji style, turbo-charged database cylinder, electric blue,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+12. RUST (CUSTOM)
+flat emoji style, cogwheel with rust color but shiny, performance lightning,
+orange-brown gradient, simple geometric design, transparent background, 512x512
+
+13. GRAFANA
+flat emoji style, multiple charts and graphs glowing, orange gradient,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+14. PROMETHEUS
+flat emoji style, metrics gauge with alert bell, red and white,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+15. KUBERNETES
+flat emoji style, ship wheel with container boxes, navy blue,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+16. DOCKER
+flat emoji style, whale carrying microservices boxes, blue gradient,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+================================================================================
+📊 CONCEPTS CDR
+================================================================================
+
+17. CDR RECORD
+flat emoji style, document with phone and data icons, neutral gray-blue,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+18. VOICE CALL
+flat emoji style, phone handset with sound waves, green gradient,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+19. SMS
+flat emoji style, speech bubble with text lines, yellow gradient,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+20. DATA SESSION
+flat emoji style, smartphone with 4G/5G waves, cyan gradient,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+21. ROAMING
+flat emoji style, globe with airplane and cell tower, travel theme,
+blue-green gradient, simple geometric design, transparent background, 512x512
+
+22. FRAUD DETECTION
+flat emoji style, warning triangle with lock and scanner, urgent red,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+================================================================================
+✅ STATUTS & ACTIONS
+================================================================================
+
+23. VALIDATED
+flat emoji style, green checkmark in circle with glow, success theme,
+bright green, simple geometric design, transparent background, 512x512
+
+24. ERROR
+flat emoji style, red X with alert symbol, warning theme,
+bright red, simple geometric design, transparent background, 512x512
+
+25. PROCESSING
+flat emoji style, spinning gear with progress bar, working theme,
+blue gradient, simple geometric design, transparent background, 512x512
+
+26. QUEUED
+flat emoji style, stacked documents in line, waiting theme,
+gray gradient, simple geometric design, transparent background, 512x512
+
+27. COMPLETED
+flat emoji style, trophy with star burst, achievement theme,
+gold gradient, simple geometric design, transparent background, 512x512
+
+28. DEPLOYED
+flat emoji style, rocket launching upward, deployment theme,
+purple-pink gradient, simple geometric design, transparent background, 512x512
+
+================================================================================
+🌍 PAYS / REGIONS
+================================================================================
+
+29. FRANCE (FR)
+flat emoji style, eiffel tower merged with cell tower, patriotic blue-red,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+30. TUNISIE (TN)
+flat emoji style, palm tree with antenna, desert sand and tech blue,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+31. FINLANDE (FN)
+flat emoji style, northern lights with 5G tower, aurora colors,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+32. SUISSE (CH)
+flat emoji style, mountain peak with satellite dish, red and white,
+simple geometric design, transparent background, 512x512, modern tech aesthetic
+
+================================================================================
+⚡ PERFORMANCE & METRICS
+================================================================================
+
+33. LATENCY
+flat emoji style, stopwatch with lightning bolt, speed theme,
+yellow-orange gradient, simple geometric design, transparent background, 512x512
+
+34. THROUGHPUT
+flat emoji style, wide pipe with data rushing through, flow theme,
+cyan gradient, simple geometric design, transparent background, 512x512
+
+35. SCALABILITY
+flat emoji style, expanding boxes multiplying, growth theme,
+green gradient, simple geometric design, transparent background, 512x512
+
+36. AVAILABILITY
+flat emoji style, uptime graph always maxed, reliability theme,
+emerald gradient, simple geometric design, transparent background, 512x512
+
+================================================================================
+🛠️ INFRASTRUCTURE
+================================================================================
+
+37. LOAD BALANCER
+flat emoji style, traffic light distributing data evenly, balance theme,
+multi-colored, simple geometric design, transparent background, 512x512
+
+38. CACHE
+flat emoji style, lightning fast storage box, speed theme,
+electric yellow, simple geometric design, transparent background, 512x512
+
+39. BACKUP
+flat emoji style, shield protecting data vault, security theme,
+steel blue, simple geometric design, transparent background, 512x512
+
+40. MONITORING
+flat emoji style, radar screen with blips, surveillance theme,
+neon green, simple geometric design, transparent background, 512x512
+
+================================================================================
+📝 DOCUMENTATION
+================================================================================
+
+41. ARCHITECTURE
+flat emoji style, blueprint with connected components, technical theme,
+navy blue, simple geometric design, transparent background, 512x512
+
+42. API DOCS
+flat emoji style, open book with code symbols, documentation theme,
+teal gradient, simple geometric design, transparent background, 512x512
+
+43. TUTORIAL
+flat emoji style, graduation cap with play button, learning theme,
+purple gradient, simple geometric design, transparent background, 512x512
+
+44. CHANGELOG
+flat emoji style, scroll with version numbers, update theme,
+orange gradient, simple geometric design, transparent background, 512x512
+
+================================================================================
+🔐 SECURITE
+================================================================================
+
+45. AUTHENTICATION
+flat emoji style, key entering lock with success glow, security theme,
+gold-bronze gradient, simple geometric design, transparent background, 512x512
+
+46. ENCRYPTION
+flat emoji style, data wrapped in secure padlock shield, privacy theme,
+dark blue, simple geometric design, transparent background, 512x512
+
+47. AUDIT LOG
+flat emoji style, magnifying glass over timestamped entries, compliance theme,
+slate gray, simple geometric design, transparent background, 512x512
+
+================================================================================
+🎨 BRANDING ORION
+================================================================================
+
+48. ORION LOGO
+flat emoji style, constellation of stars forming telecom satellite pattern,
+cosmic blue-purple gradient, simple geometric design, transparent background, 512x512
+
+49. UNIFIED CDR
+flat emoji style, puzzle pieces joining into complete telecom system,
+rainbow gradient merging into one, simple geometric design, transparent background, 512x512
+
+50. PIPELINE
+flat emoji style, assembly line transforming raw data into insights,
+industrial gray-blue with glowing output, simple geometric design, transparent background, 512x512
+
+================================================================================
+NOTES D'UTILISATION
+================================================================================
+
+Pour Midjourney, ajouter à la fin de chaque prompt :
+--style raw --v 6 --ar 1:1
+
+Pour Copilot/DALL-E, les prompts sont déjà optimisés.
+
+Après génération :
+1. Télécharger en 512x512 minimum
+2. Utiliser remove.bg pour fond transparent si nécessaire
+3. Renommer : orion-[nom]-emoji.png
+4. Stocker dans : docs/assets/emojis/

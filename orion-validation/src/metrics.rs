@@ -39,10 +39,6 @@ pub fn increment_invalid_total() {
     counter!("orion_validation_invalid_total").increment(1);
 }
 
-pub fn increment_errors_total() {
-    counter!("orion_validation_errors_total").increment(1);
-}
-
 pub fn record_latency(duration: f64) {
     histogram!("orion_validation_latency_seconds").record(duration);
 }
