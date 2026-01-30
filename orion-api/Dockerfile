@@ -16,6 +16,7 @@ FROM debian:bullseye-slim
 
 RUN apt-get update && apt-get install -y \
     ca-certificates \
+    curl \
     libssl1.1 \
     && rm -rf /var/lib/apt/lists/*
 

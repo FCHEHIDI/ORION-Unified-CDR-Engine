@@ -9,6 +9,12 @@ COPY . .
 RUN cargo build --release
 
 FROM debian:stable-slim
+
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /opt/orion
 COPY --from=builder /app/target/release/orion-traffic-generator .
 CMD ["./orion-traffic-generator"]
