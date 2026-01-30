@@ -1,0 +1,56 @@
+[package]
+name = "orion-cli"
+version = "1.0.0"
+edition = "2021"
+authors = ["ORION Team"]
+description = "ORION Unified CDR Engine - CLI with TUI dashboard"
+
+[[bin]]
+name = "orion"
+path = "src/main.rs"
+
+[dependencies]
+# CLI & Args
+clap = { version = "4.5", features = ["derive", "cargo", "color"] }
+
+# TUI (Terminal UI)
+ratatui = "0.26"
+crossterm = "0.27"
+
+# HTTP Client
+reqwest = { version = "0.11", features = ["json", "blocking"] }
+tokio = { version = "1.35", features = ["full"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Tables & Output
+tabled = "0.15"
+comfy-table = "7.1"
+
+# Colors & Formatting
+colored = "2.1"
+owo-colors = "4.0"
+
+# Time
+chrono = "0.4"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Config
+toml = "0.8"
+dirs = "5.0"
+
+# Utilities
+humantime = "2.1"
+indicatif = "0.17"
+anstyle = "1.0.13"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
