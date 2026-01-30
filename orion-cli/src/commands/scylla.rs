@@ -26,7 +26,7 @@ async fn show_status() -> Result<()> {
     println!("     Cluster Name:   {}", "orion-cluster".bright_white().bold());
     println!("     Datacenter:     {}", "datacenter1".bright_cyan());
     println!("     Total Nodes:    {}", "3".bright_green());
-    println!("     Healthy Nodes:  {}", "3/3 ✅".bright_green().bold());
+    println!("     Healthy Nodes:  {}", "3/3 ".bright_green().bold());
     println!("     Replication:    {}", "RF=3".bright_yellow());
     println!();
 

@@ -99,14 +99,14 @@ fn render_compact(f: &mut ratatui::Frame, area: Rect, throughput_data: &[u64]) {
 
     // Services Status
     let services = vec![
-        ("API", "✅", "Running", 95),
-        ("Ingestion", "✅", "Running", 88),
-        ("Validation", "✅", "Running", 92),
-        ("Normalization", "✅", "Running", 90),
-        ("Enrichment", "✅", "Running", 85),
-        ("ML Fraud", "✅", "Running", 78),
-        ("Storage Hot", "✅", "Running", 97),
-        ("Storage Cold", "✅", "Running", 98),
+        ("API", "", "Running", 95),
+        ("Ingestion", "", "Running", 88),
+        ("Validation", "", "Running", 92),
+        ("Normalization", "", "Running", 90),
+        ("Enrichment", "", "Running", 85),
+        ("ML Fraud", "", "Running", 78),
+        ("Storage Hot", "", "Running", 97),
+        ("Storage Cold", "", "Running", 98),
     ];
 
     let service_items: Vec<ListItem> = services
@@ -204,10 +204,10 @@ fn render_full(f: &mut ratatui::Frame, area: Rect, throughput_data: &[u64]) {
 
     // Kafka Lag
     let kafka_items: Vec<ListItem> = vec![
-        "cdr-raw: lag 12 ✅",
+        "cdr-raw: lag 12 ",
         "cdr-validated: lag 47 ⚠️",
         "cdr-normalized: lag 1,847 🔴",
-        "cdr-enriched: lag 4 ✅",
+        "cdr-enriched: lag 4 ",
     ]
     .iter()
     .map(|item| {
@@ -227,11 +227,11 @@ fn render_full(f: &mut ratatui::Frame, area: Rect, throughput_data: &[u64]) {
 
     // Infrastructure
     let infra_items: Vec<ListItem> = vec![
-        ("ScyllaDB", "✅ Healthy", Color::Green),
-        ("Kafka", "✅ Healthy", Color::Green),
-        ("MinIO", "✅ Healthy", Color::Green),
-        ("Prometheus", "✅ Healthy", Color::Green),
-        ("Grafana", "✅ Healthy", Color::Green),
+        ("ScyllaDB", " Healthy", Color::Green),
+        ("Kafka", " Healthy", Color::Green),
+        ("MinIO", " Healthy", Color::Green),
+        ("Prometheus", " Healthy", Color::Green),
+        ("Grafana", " Healthy", Color::Green),
     ]
     .iter()
     .map(|(name, status, color)| {
@@ -273,7 +273,7 @@ fn render_simple(f: &mut ratatui::Frame, area: Rect, _throughput_data: &[u64]) {
     let status = Paragraph::new(vec![
         Line::from(vec![
             Span::styled("Status: ", Style::default().fg(Color::Cyan)),
-            Span::styled("All Systems Operational ✅", Style::default().fg(Color::Green).add_modifier(Modifier::BOLD)),
+            Span::styled("All Systems Operational ", Style::default().fg(Color::Green).add_modifier(Modifier::BOLD)),
         ]),
         Line::from(""),
         Line::from(vec![

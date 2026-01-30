@@ -177,6 +177,6 @@ fn get_risk_level(score: f32) -> (colored::ColoredString, &'static str, Color) {
     } else if score >= 0.5 {
         ("Low Risk".bright_green(), "🟢", Color::Green)
     } else {
-        ("Safe".bright_cyan(), "✅", Color::Cyan)
+        ("Safe".bright_cyan(), "", Color::Cyan)
     }
 }

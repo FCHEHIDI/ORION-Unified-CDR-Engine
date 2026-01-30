@@ -8,12 +8,12 @@ pub async fn execute(detailed: bool, cli: &Cli) -> Result<()> {
     
     // Print header
     println!("{}", "╔═══════════════════════════════════════════════════════════════════╗".bright_magenta());
-    println!("{}", "║  🏥 ORION System Health Check                                    ║".bright_magenta());
+    println!("{}", "║                      ORION System Health Check                    ║".bright_magenta());
     println!("{}", "╚═══════════════════════════════════════════════════════════════════╝".bright_magenta());
     println!();
 
     // API Health Check
-    println!("{}", "  ✅ API Status".bright_cyan().bold());
+    println!("{}", "   API Status".bright_cyan().bold());
     match client.health_check().await {
         Ok(status) => {
             println!("     Status: {}", "HEALTHY".bright_green().bold());
@@ -27,7 +27,7 @@ pub async fn execute(detailed: bool, cli: &Cli) -> Result<()> {
     println!();
 
     // Services Status Table
-    println!("{}\n", "  🔄 Core Services".bright_cyan().bold());
+    println!("{}\n", "  Core Services".bright_cyan().bold());
     let mut table = Table::new();
     table
         .load_preset(UTF8_FULL)
@@ -39,14 +39,14 @@ pub async fn execute(detailed: bool, cli: &Cli) -> Result<()> {
         ]);
 
     let services = vec![
-        ("orion-api", "Running", "8080", "✅"),
-        ("orion-ingestion", "Running", "8081", "✅"),
-        ("orion-validation", "Running", "8082", "✅"),
-        ("orion-normalization", "Running", "8083", "✅"),
-        ("orion-enrichment", "Running", "8084", "✅"),
-        ("orion-ml-fraud-agent", "Running", "8085", "✅"),
-        ("orion-storage-hot", "Running", "8086", "✅"),
-        ("orion-storage-cold", "Running", "8087", "✅"),
+        ("orion-api", "Running", "8080", "OK"),
+        ("orion-ingestion", "Running", "8081", "OK"),
+        ("orion-validation", "Running", "8082", "OK"),
+        ("orion-normalization", "Running", "8083", "OK"),
+        ("orion-enrichment", "Running", "8084", "OK"),
+        ("orion-ml-fraud-agent", "Running", "8085", "OK"),
+        ("orion-storage-hot", "Running", "8086", "OK"),
+        ("orion-storage-cold", "Running", "8087", "OK"),
     ];
 
     for (service, status, port, health) in services {
@@ -62,7 +62,7 @@ pub async fn execute(detailed: bool, cli: &Cli) -> Result<()> {
     println!();
 
     // Infrastructure Status
-    println!("{}\n", "  📊 Infrastructure".bright_cyan().bold());
+    println!("{}", "  Infrastructure".bright_cyan().bold());
     let mut infra_table = Table::new();
     infra_table
         .load_preset(UTF8_FULL)
@@ -73,15 +73,15 @@ pub async fn execute(detailed: bool, cli: &Cli) -> Result<()> {
         ]);
 
     let infra = vec![
-        ("ScyllaDB", "✅ Healthy", "localhost:9042"),
-        ("Kafka", "✅ Healthy", "localhost:9092"),
-        ("MinIO", "✅ Healthy", "localhost:9000"),
-        ("Prometheus", "✅ Healthy", "localhost:9090"),
-        ("Grafana", "✅ Healthy", "localhost:3000"),
+        ("ScyllaDB", "Healthy", "localhost:9042"),
+        ("Kafka", "Healthy", "localhost:9092"),
+        ("MinIO", "Healthy", "localhost:9000"),
+        ("Prometheus", "Healthy", "localhost:9090"),
+        ("Grafana", "Healthy", "localhost:3000"),
     ];
 
     for (component, status, endpoint) in infra {
-        let status_color = if status.contains("✅") { Color::Green } else { Color::Red };
+        let status_color = if status.contains("Healthy") { Color::Green } else { Color::Red };
         infra_table.add_row(vec![
             Cell::new(component).fg(Color::White),
             Cell::new(status).fg(status_color),

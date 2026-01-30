@@ -124,7 +124,7 @@ async fn show_dashboard() -> Result<()> {
         Cell::new("3").fg(Color::Yellow),
         Cell::new("SIM box detection").fg(Color::White),
         Cell::new("892").fg(Color::Yellow),
-        Cell::new("➡️ 0%").fg(Color::Cyan),
+        Cell::new(" 0%").fg(Color::Cyan),
     ]);
 
     println!("{}", patterns_table);

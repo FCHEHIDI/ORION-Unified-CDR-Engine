@@ -6,12 +6,12 @@ use anyhow::Result;
 use clap::{Parser, Subcommand};
 use colored::*;
 
-/// 🚀 ORION Unified CDR Engine - CLI
+/// ORION Unified CDR Engine - CLI
 #[derive(Parser)]
 #[command(
     name = "orion",
     version,
-    about = "🚀 ORION CDR Engine CLI - Real-time CDR monitoring and analytics",
+    about = "ORION CDR Engine CLI - Real-time CDR monitoring and analytics",
     long_about = None,
     styles = get_styles()
 )]
@@ -42,13 +42,13 @@ enum OutputFormat {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// 🔍 CDR operations (get, search, export)
+    /// CDR operations (get, search, export)
     Cdr {
         #[command(subcommand)]
         action: CdrCommands,
     },
 
-    /// 📊 Live monitoring dashboard (TUI)
+    /// Live monitoring dashboard (TUI)
     Monitor {
         /// Refresh interval in seconds
         #[arg(short, long, default_value = "2")]
@@ -59,20 +59,20 @@ enum Commands {
         mode: DashboardMode,
     },
 
-    /// ✅ System health check
+    /// System health check
     Health {
         /// Show detailed diagnostics
         #[arg(short, long)]
         detailed: bool,
     },
 
-    /// 📋 Service status
+    /// Service status
     Status {
         /// Service name (empty for all)
         service: Option<String>,
     },
 
-    /// 📝 Service logs
+    /// Service logs
     Logs {
         /// Service name
         service: String,
@@ -86,19 +86,19 @@ enum Commands {
         tail: usize,
     },
 
-    /// 🚨 Fraud detection operations
+    /// Fraud detection operations
     Fraud {
         #[command(subcommand)]
         action: FraudCommands,
     },
 
-    /// 🔧 Kafka operations
+    /// Kafka operations
     Kafka {
         #[command(subcommand)]
         action: KafkaCommands,
     },
 
-    /// 🗄️ ScyllaDB operations
+    /// ScyllaDB operations
     Scylla {
         #[command(subcommand)]
         action: ScyllaCommands,
@@ -317,7 +317,7 @@ fn print_banner() {
     ║  ╚██████╔╝██║  ██║██║╚██████╔╝██║ ╚████║                ║
     ║   ╚═════╝ ╚═╝  ╚═╝╚═╝ ╚═════╝ ╚═╝  ╚═══╝                ║
     ║                                                           ║
-    ║        🚀 Unified CDR Engine - CLI v1.0.0                ║
+    ║           Unified CDR Engine - CLI v1.0.0                ║
     ║                                                           ║
     ╚═══════════════════════════════════════════════════════════╝
     "#.bright_cyan());

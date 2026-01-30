@@ -45,14 +45,14 @@ async fn show_consumer_lag(topic: Option<String>, all_topics: bool) -> Result<()
         ]);
 
     let lag_data = vec![
-        ("orion-ingestion", "cdr-raw", "0", "1,247,392", "12", "✅"),
-        ("orion-ingestion", "cdr-raw", "1", "1,251,847", "8", "✅"),
+        ("orion-ingestion", "cdr-raw", "0", "1,247,392", "12", ""),
+        ("orion-ingestion", "cdr-raw", "1", "1,251,847", "8", ""),
         ("orion-validation", "cdr-validated", "0", "1,247,380", "47", "⚠️"),
         ("orion-validation", "cdr-validated", "1", "1,251,839", "124", "⚠️"),
         ("orion-enrichment", "cdr-normalized", "0", "1,247,333", "1,847", "🔴"),
         ("orion-enrichment", "cdr-normalized", "1", "1,251,715", "2,234", "🔴"),
-        ("orion-fraud", "cdr-enriched", "0", "1,245,486", "4", "✅"),
-        ("orion-fraud", "cdr-enriched", "1", "1,249,481", "7", "✅"),
+        ("orion-fraud", "cdr-enriched", "0", "1,245,486", "4", ""),
+        ("orion-fraud", "cdr-enriched", "1", "1,249,481", "7", ""),
     ];
 
     for (group, topic_name, partition, current, lag, status) in lag_data {
