@@ -3,6 +3,7 @@ mod features;
 mod metrics;
 mod model;
 mod routes;
+mod simple_ml;
 
 use axum::{routing::{get, post}, Router};
 use config::Config;

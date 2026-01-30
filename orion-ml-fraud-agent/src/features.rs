@@ -34,8 +34,7 @@ pub struct FraudFeatures {
 }
 
 impl FraudFeatures {
-    /// Convert features to array for ONNX input (currently unused - for future ONNX integration)
-    #[allow(dead_code)]
+    /// Convert features to array for ONNX input
     pub fn to_array(&self) -> Vec<f32> {
         vec![
             self.duration_seconds,

@@ -39,5 +39,25 @@ temp/
 # Development reports
 dev-reports/
 
-# PowerShell modules cache
+# Python
 __pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+*.egg-info/
+
+# Archives & Tests
+.archive/
+*.bat
+test_*.json
+
+# ML Models (track weights, ignore large models)
+*.onnx
+*.pkl
+!models/fraud_weights.json
+
+# Docker
+.dockerignore

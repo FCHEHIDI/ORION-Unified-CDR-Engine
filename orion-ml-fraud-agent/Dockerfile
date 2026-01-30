@@ -1,5 +1,5 @@
-# Builder stage
-FROM rust:1.83-slim as builder
+# Builder stage  
+FROM rust:latest as builder
 
 WORKDIR /app
 
@@ -28,8 +28,9 @@ RUN apt-get update && \
 # Copy binary from builder
 COPY --from=builder /app/target/release/orion-ml-fraud-agent /usr/local/bin/
 
-# Create models directory
+# Create models directory and copy trained weights
 RUN mkdir -p /app/models
+COPY models/fraud_weights.json /app/models/fraud_weights.json
 
 # Non-root user for security
 RUN useradd -m -u 1000 orion && \

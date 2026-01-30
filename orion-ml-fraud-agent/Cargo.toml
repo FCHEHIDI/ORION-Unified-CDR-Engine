@@ -30,10 +30,6 @@ tracing-subscriber = { version = "0.3", features = ["json", "env-filter"] }
 # Configuration
 config = "0.14"
 
-# For future ONNX support (commented for now)
-# ort = { version = "2.0.0-rc.11", features = ["download-binaries"] }
-# ndarray = "0.15"
-
 [dev-dependencies]
 mockall = "0.12"
 tokio-test = "0.4"

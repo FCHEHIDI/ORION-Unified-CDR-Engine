@@ -1,30 +1,54 @@
 use crate::config::ModelConfig;
 use crate::features::{FraudFeatures, FraudPrediction};
 use crate::metrics;
+use crate::simple_ml::LogisticRegressionModel;
 use anyhow::Result;
-use tracing::info;
+use std::sync::Arc;
+use tracing::{info, warn};
 
-/// Rule-based fraud detection model (ONNX integration planned)
+/// Fraud detection model
 pub struct FraudDetector {
+    model: Option<Arc<LogisticRegressionModel>>,
     threshold: f32,
     batch_size: usize,
     model_type: String,
+    use_fallback: bool,
 }
 
 impl FraudDetector {
     /// Create a new fraud detector
-    /// For now uses rule-based scoring, will integrate ONNX model later
     pub async fn new(config: &ModelConfig) -> Result<Self> {
-        info!("Initializing fraud detector (rule-based mode)");
-        info!("Model path configured: {} (not loaded yet - using rules)", config.path);
+        info!("Initializing fraud detector");
+        info!("Model path: {}", config.path);
         info!("Fraud threshold: {}", config.threshold);
         
-        metrics::record_model_load(true);
+        // Try to load simple ML model from JSON weights
+        let (model, use_fallback) = match LogisticRegressionModel::from_json(&config.path) {
+            Ok(model) => {
+                info!("✅ ML model loaded successfully from {}", config.path);
+                metrics::record_model_load(true);
+                (Some(Arc::new(model)), false)
+            }
+            Err(e) => {
+                warn!("⚠️  Failed to load ML model: {}. Using rule-based fallback.", e);
+                warn!("Expected model weights at: {}", config.path);
+                metrics::record_model_load(false);
+                (None, true)
+            }
+        };
+        
+        let model_type = if use_fallback {
+            "Rule-based fallback".to_string()
+        } else {
+            "Logistic Regression (native Rust)".to_string()
+        };
         
         Ok(Self {
+            model,
             threshold: config.threshold,
             batch_size: config.batch_size,
-            model_type: "Rule-based (ONNX integration planned)".to_string(),
+            model_type,
+            use_fallback,
         })
     }
 
@@ -32,9 +56,13 @@ impl FraudDetector {
     pub async fn predict(&self, features: &FraudFeatures) -> Result<FraudPrediction> {
         let start = std::time::Instant::now();
         
-        // For now, use a simple rule-based score as fallback
-        // This will be replaced by actual ONNX inference once we have the model
-        let fraud_score = self.calculate_fallback_score(features);
+        let fraud_score = if self.use_fallback {
+            // Fallback to rule-based scoring
+            self.calculate_fallback_score(features)
+        } else {
+            // Use simple ML model inference
+            self.predict_with_ml(features)?
+        };
         
         let is_fraud = fraud_score > self.threshold;
         let confidence = if is_fraud {
@@ -56,6 +84,20 @@ impl FraudDetector {
             inference_time_ms,
         })
     }
+    
+    /// Perform ML inference for a single sample using Burn
+    fn predict_with_ml(&self, features: &FraudFeatures) -> Result<f32> {
+        let model = self.model.as_ref()
+            .ok_or_else(|| anyhow::anyhow!("No ML model available"))?;
+        
+        // Convert features to array
+        let feature_array = features.to_array();
+        
+        // Run inference using Burn
+        let fraud_score = model.predict(&feature_array);
+        
+        Ok(fraud_score.max(0.0).min(1.0))
+    }
 
     /// Predict fraud for a batch of CDRs
     pub async fn predict_batch(&self, features_batch: &[FraudFeatures]) -> Result<Vec<FraudPrediction>> {
@@ -65,19 +107,57 @@ impl FraudDetector {
             return Ok(Vec::new());
         }
         
-        // For batch processing, predict each individually for now
-        // TODO: Implement true batch inference with ONNX
         let mut predictions = Vec::with_capacity(features_batch.len());
         
-        for features in features_batch {
-            let prediction = self.predict(features).await?;
-            predictions.push(prediction);
+        if self.use_fallback {
+            // Fallback: predict each individually
+            for features in features_batch {
+                let prediction = self.predict(features).await?;
+                predictions.push(prediction);
+            }
+        } else {
+            // Burn ML batch inference
+            let model = self.model.as_ref()
+                .ok_or_else(|| anyhow::anyhow!("No ML model available"))?;
+            
+            // Convert features to batch array
+            let feature_arrays: Vec<Vec<f32>> = features_batch
+                .iter()
+                .map(|f| f.to_array())
+                .collect();
+            
+            // Run batch inference
+            let scores = model.predict_batch(&feature_arrays);
+            
+            // Process each prediction
+            for (features, fraud_score) in features_batch.iter().zip(scores.iter()) {
+                let fraud_score = fraud_score.max(0.0).min(1.0);
+                let is_fraud = fraud_score > self.threshold;
+                let confidence = if is_fraud { fraud_score } else { 1.0 - fraud_score };
+                
+                predictions.push(FraudPrediction {
+                    cdr_id: features.cdr_id.clone(),
+                    fraud_score,
+                    is_fraud,
+                    confidence,
+                    inference_time_ms: 0.0, // Set below
+                });
+            }
+        }
+        
+        let total_time_ms = start.elapsed().as_secs_f32() * 1000.0;
+        let avg_time_ms = total_time_ms / features_batch.len() as f32;
+        
+        // Update inference time for all predictions
+        for pred in &mut predictions {
+            pred.inference_time_ms = avg_time_ms;
         }
         
         info!(
-            "Batch prediction completed: {} samples in {:.2}ms",
+            "Batch prediction completed: {} samples in {:.2}ms ({:.2}ms avg per sample)",
             features_batch.len(),
-            start.elapsed().as_secs_f32() * 1000.0
+            total_time_ms,
+            avg_time_ms
         );
         
         Ok(predictions)

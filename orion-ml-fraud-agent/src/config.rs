@@ -37,7 +37,7 @@ impl Config {
 
         let model = ModelConfig {
             path: env::var("MODEL_PATH")
-                .unwrap_or_else(|_| "./models/fraud_detector.onnx".to_string()),
+                .unwrap_or_else(|_| "./models/fraud_weights.json".to_string()),
             threshold: env::var("FRAUD_THRESHOLD")
                 .unwrap_or_else(|_| "0.5".to_string())
                 .parse()?,

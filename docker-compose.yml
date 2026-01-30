@@ -212,7 +212,7 @@ services:
       KAFKA_CONSUMER_GROUP: orion-enrichment-group
       KAFKA_INPUT_TOPIC: cdr.normalized
       KAFKA_OUTPUT_TOPIC: cdr.enriched
-      ENABLE_FRAUD_DETECTION: "false"
+      ENABLE_FRAUD_DETECTION: "true"
       FRAUD_AGENT_URL: http://orion-ml-fraud-agent:8090
       ENABLE_NETWORK_DATA: "true"
       ENABLE_CLIENT_DATA: "true"
@@ -240,10 +240,9 @@ services:
     environment:
       SERVER_HOST: 0.0.0.0
       SERVER_PORT: 8090
-      MODEL_PATH: /app/models/fraud_detector.onnx
+      MODEL_PATH: /app/models/fraud_weights.json
       FRAUD_THRESHOLD: 0.5
       MODEL_BATCH_SIZE: 32
-      ENABLE_CUDA: "false"
       RUST_LOG: info
     networks:
       - orion-network
