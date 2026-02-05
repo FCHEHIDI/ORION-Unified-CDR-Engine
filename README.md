@@ -254,11 +254,6 @@ cargo fmt --all
 - **[Index docs complètes](docs/README.md)**
 - **[FAQ](docs/00-overview/glossary.md)** — Glossaire technique
 
-### Contacts
-- **Lead Architect** : [À définir]
-- **Team ML** : [À définir]
-- **Ops/SRE** : [À définir]
-
 ---
 
 ## 📜 Licence
