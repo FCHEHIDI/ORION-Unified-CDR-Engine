@@ -61,3 +61,6 @@ test_*.json
 
 # Docker
 .dockerignore
+
+# Screenshots and temporary images
+Copilot_20260125_190053.png
